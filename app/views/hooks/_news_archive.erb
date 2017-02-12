@@ -1,0 +1,29 @@
+<% if @project %>
+  <% latest_news = @project.news.includes(:project).order("#{News.table_name}.created_on DESC").all %>
+<% else %>
+  <% latest_news = News.latest(User.current, 999999) %>
+<% end %>
+<% last_year = nil %>
+
+<% latest_news.each do |news| %>
+  <% if last_year != news.created_on.year %>
+    <% last_year = news.created_on.year %>
+
+    <% unless last_year.nil? %>
+      </ul>
+    <% end %>
+    <h3><%= last_year %></h3>
+    <ul>
+  <% end %>
+
+  <li>
+    <strong><%= news.created_on.strftime("%d") %>.<%= ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][news.created_on.month] %> <%= news.created_on.strftime("%Y") %></strong>
+    <%= link_to_project(news.project) + ':' unless @project %>
+    <%= link_to(h(news.title), news_path(news)) %>
+  </li>
+<% end %>
+
+<% unless last_year.nil? %>
+  </ul>
+<% end %>
+
