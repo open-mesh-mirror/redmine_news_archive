@@ -1,6 +1,6 @@
 require 'redmine'
 
-require_dependency 'redmine_news_archive'
+require_relative './lib/redmine_news_archive'
 
 Redmine::Plugin.register :redmine_news_archive do
   name 'news archive macro'
